@@ -1,18 +1,3 @@
-terraform {
-  required_version = "~>1.0.2"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 3.0"
-    }
-  }
-}
-
-provider "aws" {
-  region  = var.aws_region
-}
-
 ################################ create VPC and its resources############
 
 # one vpc to hold them all, and in the cloud bind them
