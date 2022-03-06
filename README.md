@@ -20,6 +20,7 @@ A Terraform configuration to launch a cluster of EC2 instances.  Each EC2 instan
 Applying the configuration takes about 30 seconds (in US east Virigina), and another two or three minutes for the EC2 instances to become healthy and for the load balancer DNS record to propagate.
 
 ## Files
++ `provider.tf` - AWS Provider details 
 + `main.tf` - main terraform configuration file that launches all the resources for this project. Usually we have separate files for providers, VPC and its resources, ALB and its resources, EC2 instances and its resources, Autoscaling Group and policies,  RDS DB and it's resources. 
 + `vars.tf` - Used by other files, sets default AWS region, calculates availability zones, etc.
 + `userdata.sh` - Used to install docker and nginx application in the EC2 instances
