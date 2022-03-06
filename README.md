@@ -1,27 +1,62 @@
-# Lucid-project: VPC creation using Terraform
+# Lucid-project: VPC,ALB,Internet gateway,NAT gateway,subnets,RDS postgressSQL DB,Nginx docker container creation using Terraform
 
-# High level Design details:
-==========================
-Deployment in AWS region us-east-1 in 2 availability zones for high availability
-1 VPC in AWS cloud platform
-1 internet gateway for public facing applications
-2 public subnets one each in an availability zone
-1 main route table 
-2 private subnets one each in an availability zone
-2 Ec2 instances one each in availability zone with auto scaling group (minimum 1 and maximum 6 instances) in private subnet
-Auto Scaling Group is attached to Auto scaling policy which is triggered based on cloudwatch alarm
+VPC with 2 Availability Zones with a public/private subnet for each Availability Zones
+ 
+2 containers in private subnets behind a Application Load Balancer (ALB) with AutoScaling Group and Auto Scaling policy
+
 RDS postgress SQL database available in 2 availability zones in private subnet
 
-# Recommendation for Production Implementation:
-=============================================
+## AutoScaling Policy
++ Here, we specified increasing instance by 1 (scaling_adjustment = “1”) period without scaling (5 minutes-cooldown)
++ policy type, Simple scaling—Increase or decrease the current capacity of the group based on a single scaling adjustment.
++ Then, we creates cloudwatch alarm wich triggers autoscaling policy which will compare CPU utilization.
++ If average of CPU utilization is higher than 60% for 2 consecutive periods (120*2 sec), then a new instance will be created.
++ If average of CPU utilization is lower than 50% for 2 consecutive periods (120*2 sec),
+then a new instance will be created.
 
-How would a future application obtain the load balancer’s DNS name if it wanted to use this service?
-DNS name is obtained from the output variable http://${aws_alb.main_alb.dns_name}-. "A" record will be created in Route53 for this DNS name. 
 
-What aspects need to be considered to make the code work in a CD pipeline (how does it successfully and safely get into production)?
+## Summary
+A Terraform configuration to launch a cluster of EC2 instances.  Each EC2 instance runs a single nginx Docker container (based on the latest official nginx Docker image).  One EC2 instance is launched in each availability zone of the region.  The load balancer and EC2 instances are launched in a **custom VPC**, and use custom security groups.
 
-A Jenkins pipeline can be created for each of the above steps and the infrastructure can be provisioned.
-All the code will be stored in github for version control and code migration to Developement, UAT and Production. 
-Variables can be overridden based on the deployment environment by passing the variable file while running the terraform apply command.  
-Password should be stored in secret vault and should not be exposed in the terminal or any logs while creating the infrastructure.
-Authentication process can be run in side car to reduce the load in application container
+Applying the configuration takes about 30 seconds (in US east Virigina), and another two or three minutes for the EC2 instances to become healthy and for the load balancer DNS record to propagate.
+
+## Files
++ `provider.tf` - AWS Provider.
++ `main.tf` - main terraform configuration file that launches all the resources for this project
++ `vars.tf` - Used by other files, sets default AWS region, calculates availability zones, etc.
++ `userdata.sh` - Used to install docker and nginx application in the EC2 instances
+
+## Access credentials
+AWS access credentials must be supplied on the command line (see example below).  This Terraform script was tested in my own AWS account with a user that has the `AmazonEC2FullAccess` and `AmazonVPCFullAccess` policies.  It was also tested in the with a user that has the `AdministratorAccess` policy.
+
+## Command Line Examples
+To setup provisioner
+```
+$ terraform init
+```
+
+To launch the EC2 demo cluster:
+```
+$ terraform plan -out=aws.tfplan -var "aws_access_key=······" -var "aws_secret_key=······"
+$ terraform apply aws.tfplan
+```
+To teardown the EC2 demo cluster:
+```
+$ terraform destroy -var "aws_access_key=······" -var "aws_secret_key=······"
+```
+
+## Regions
+The default AWS region is US East Virginia (us-east-1).  However, varaibles can be overridden based on the deployment environment by passing the corresponding variable file while running the terraform apply command. For Example:
+```
+$ terraform plan -out=aws.tfplan -var "aws_access_key=······" -var "aws_secret_key=······" -var-file dev-variable.tfvar
+$ terraform apply aws.tfplan
+$ terraform destroy -var "aws_access_key=······" -var "aws_secret_key=······" -var-file dev-variable.tfvar
+```
+Note: we can skip the keys args in the command if they are set via shell/env exported variables.
+
+## URL
+Applying this Terraform configuration returns the load balancer's public URL on the last line of output.  This URL can be used to view the default nginx homepage.
+
+
+
+
