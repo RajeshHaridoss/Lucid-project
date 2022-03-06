@@ -9,10 +9,9 @@ RDS postgress SQL database available in 2 availability zones in private subnet
 ## AutoScaling Policy
 + Here, we specified increasing instance by 1 (scaling_adjustment = “1”) period without scaling (5 minutes-cooldown)
 + policy type, Simple scaling—Increase or decrease the current capacity of the group based on a single scaling adjustment.
-+ Then, we creates cloudwatch alarm wich triggers autoscaling policy which will compare CPU utilization.
++ Then, we creates cloudwatch alarm which triggers autoscaling policy which will compare CPU utilization.
 + If average of CPU utilization is higher than 60% for 2 consecutive periods (120*2 sec), then a new instance will be created.
-+ If average of CPU utilization is lower than 50% for 2 consecutive periods (120*2 sec),
-then a new instance will be created.
++ If average of CPU utilization is lower than 50% for 2 consecutive periods (120*2 sec), then an instance will be downsized.
 
 
 ## Summary
@@ -26,7 +25,7 @@ Applying the configuration takes about 30 seconds (in US east Virigina), and ano
 + `userdata.sh` - Used to install docker and nginx application in the EC2 instances
 
 ## Access credentials
-AWS access credentials must be supplied on the command line (see example below).  This Terraform script was tested in my own AWS account with a user that has the `AmazonEC2FullAccess` and `AmazonVPCFullAccess` policies.  It was also tested in the with a user that has the `AdministratorAccess` policy.
+AWS access credentials must be supplied on the command line (see example below).  This Terraform script should be executed with a user that has the `AmazonEC2FullAccess` and `AmazonVPCFullAccess` policies and also with `AdministratorAccess` policy.
 
 ## Command Line Examples
 To setup provisioner
