@@ -33,7 +33,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = "${aws_vpc.main.id}"
 
   tags = { 
-     Name = IGW for demo 
+     Name = "IGW for demo" 
   }  
 }
 
@@ -209,7 +209,6 @@ resource "aws_alb_listener" "http_listener" {
 }
 
 # target group attach
-# using nested interpolation functions and the count parameter to the "aws_alb_target_group_attachment"
 resource "aws_lb_target_group_attachment" "http" {
   count = "${length(aws_instance.app_server)}"
   target_group_arn = "${aws_alb_target_group.demo-tg.arn}"
@@ -304,19 +303,7 @@ resource "aws_autoscaling_group" "ec2_asg" {
 }
 
 
-# AutoScaling Policy
-# Here, we specified increasing instance by 1 (scaling_adjustment = “1”)
-# period without scaling (5 minutes-cooldown)
-# policy type, Simple scaling—Increase or decrease the current capacity of the group 
-# based on a single scaling adjustment.
-# Then we creates cloudwatch alarm wich triggers autoscaling policy which will compare CPU utilization.
-# If average of CPU utilization is higher than 60% for 2 consecutive periods (120*2 sec),
-# then a new instance will be created.
-# If average of CPU utilization is lower than 50% for 2 consecutive periods (120*2 sec),
-# then an instance will be downsized.
-
-
-# scale up alarm
+# scale up cloudwatch alarm
 resource "aws_autoscaling_policy" "demo-cpu-policy" {
 	name = "demo-cpu-policy"
 	autoscaling_group_name = "${aws_autoscaling_group.ec2_asg.name}"
