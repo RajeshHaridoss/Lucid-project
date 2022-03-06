@@ -1,0 +1,7 @@
+Q1. How would a future application obtain the load balancer’s DNS name if it wanted to use this service?
+
+DNS name is obtained from the output variable http://${aws_alb.main_alb.dns_name}-. "A" record will be created in Route53 for this DNS name. 
+
+Q2. What aspects need to be considered to make the code work in a CD pipeline (how does it successfully and safely get into production)?
+
+A Jenkins pipeline can be created for each of the above steps and the infrastructure can be provisioned.All the code will be stored in github for version control and code migration to Developement, UAT and Production. Password should be stored in secret vault and should not be exposed in the terminal or any logs while creating the infrastructure.Authentication process can be run in side car to reduce the load in application container.
