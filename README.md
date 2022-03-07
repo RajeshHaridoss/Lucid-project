@@ -47,12 +47,10 @@ $ terraform destroy -var "aws_access_key=······" -var "aws_secret_key=··
 ## Regions
 The default AWS region is US East Virginia (us-east-1).  However, varaibles can be overridden based on the deployment environment by passing the corresponding variable file while running the terraform apply command. For Example:
 ```
-$ terraform plan -out=aws.tfplan -var "aws_access_key=······" -var "aws_secret_key=······" -var-file dev-variable.tfvar
+$ terraform plan -out=aws.tfplan -var "aws_access_key=······" -var "aws_secret_key=······" -var-file development.tfvar
 $ terraform apply aws.tfplan
-$ terraform destroy -var "aws_access_key=······" -var "aws_secret_key=······" -var-file dev-variable.tfvar
+$ terraform destroy -var "aws_access_key=······" -var "aws_secret_key=······" -var-file development.tfvar
 ```
-Note: we can skip the keys args in the command if they are set via shell/env exported variables.
-
 ## URL
 Applying this Terraform configuration returns the load balancer's public URL on the last line of output.  This URL can be used to view the default nginx homepage.
 
