@@ -7,7 +7,6 @@ VPC with 2 Availability Zones with a public/private subnet for each Availability
 RDS postgress SQL database available in 2 availability zones in private subnet
 
 ## AutoScaling Policy
-+ Here, we specified increasing instance by 1 (scaling_adjustment = “1”) period without scaling (5 minutes-cooldown)
 + policy type, Simple scaling—Increase or decrease the current capacity of the group based on a single scaling adjustment.
 + Then, we creates cloudwatch alarm which triggers autoscaling policy which will compare CPU utilization.
 + If average of CPU utilization is higher than 60% for 2 consecutive periods (120*2 sec), then a new instance will be created.
