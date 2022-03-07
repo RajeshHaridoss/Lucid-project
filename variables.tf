@@ -87,6 +87,6 @@ variable "rds_publicly_accessible" {
 
 variable "dns_name" {
   type        = string
-  default     = "lucid.com"
+  default     = "appdb.lucid.com"
   description = "DNS name for this application"
 }
