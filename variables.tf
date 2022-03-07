@@ -83,5 +83,10 @@ variable "rds_admin_password" {
 
 variable "rds_publicly_accessible" {
   default = "false"
+}
 
-
+variable "dns_name" {
+  type        = string
+  default     = "lucid.com"
+  description = "DNS name for this application"
+}
