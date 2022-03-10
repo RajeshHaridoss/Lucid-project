@@ -38,7 +38,7 @@ resource "aws_subnet" "public" {
 
 # dynamic list of the public subnets created above
 data "aws_subnet_ids" "public" {
-  depends_on = aws_subnet.public
+  depends_on = [aws_subnet.public]
   vpc_id     = "${aws_vpc.main.id}"
 }
 
