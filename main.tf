@@ -47,7 +47,7 @@ resource "aws_subnet" "public" {
   vpc_id                  = "${aws_vpc.main.id}"
   tags {
     Name = "subnet-pub-${count.index}"
-  )
+  }
 }
 
 # dynamic list of the public subnets created above
