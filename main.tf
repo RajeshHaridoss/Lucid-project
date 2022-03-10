@@ -215,7 +215,13 @@ resource "aws_security_group" "ec2_sg" {
   description = "Allow Incoming http traffic only"
   vpc_id      = "${aws_vpc.main.id}"
 
-
+ ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/24"]
+  }
+	
 ingress {
     from_port   = 80
     to_port     = 80
