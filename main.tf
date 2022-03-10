@@ -40,10 +40,13 @@ resource "aws_subnet" "public" {
 # main route table for vpc and subnets
 resource "aws_route_table" "public" {
   vpc_id = "${aws_vpc.main.id}"
+	
+	
+  route {
+    cidr_block = "10.0.0.0/16"
+    gateway_id = aws_internet_gateway.igw.id
+  }
 
-  gateway_id             = "${aws_internet_gateway.igw.id}"
-  destination_cidr_block = "0.0.0.0/0"
- 
   tags = {
     Name = "public_route_table_main"
   }
