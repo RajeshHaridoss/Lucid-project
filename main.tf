@@ -7,7 +7,7 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = "true"
   enable_dns_support   = "true"
 
-  tags { 
+  tags = { 
      Name = "vpc for demo"    
   }
 }
@@ -17,7 +17,7 @@ resource "aws_vpc" "main" {
 resource "aws_internet_gateway" "igw" {
   vpc_id = "${aws_vpc.main.id}"
 
-  tags { 
+  tags = { 
      Name = "IGW for demo" 
   }  
 }
@@ -47,7 +47,7 @@ data "aws_subnet_ids" "public" {
 resource "aws_route_table" "public" {
   vpc_id = "${aws_vpc.main.id}"
 
-  tags {
+  tags = {
     Name = "public_route_table_main"
   }
 }
@@ -117,7 +117,7 @@ resource "aws_nat_gateway" "demo" {
 resource "aws_route_table" "private" {
   vpc_id = "${aws_vpc.main.id}"
   count ="${length(var.availability_zones)}" 
-  tags { 
+  tags = { 
     Name = "private_subnet_route_table_${count.index}"
   }
 }
@@ -154,7 +154,7 @@ resource "aws_security_group" "alb_sg" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
-  tags {
+  tags = {
     Name = "alb-security-group"
   }
 }
@@ -164,7 +164,7 @@ resource "aws_alb" "main_alb" {
   name                      = "main-alb"
   security_groups           = ["${aws_security_group.alb_sg.id}"]
   subnets                   = ["${aws_subnet.private.*.id}"]
-  tags {
+  tags = {
     Name = "main-alb"
   }
 }
@@ -262,7 +262,7 @@ resource "aws_instance" "app_server" {
   # references security group created above
   vpc_security_group_ids = ["${aws_security_group.ec2_sg.id}"]
 
-  tags {
+  tags = {
     Name = "nginx-instance-${count.index}"
   }
 }
@@ -379,7 +379,7 @@ resource "aws_security_group" "rds_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name = "rds_security_group"
   }
 }
@@ -399,7 +399,7 @@ resource "aws_db_instance" "db" {
   final_snapshot_identifier = "demo-db-backup"
   skip_final_snapshot       = true
 
-  tags {
+  tags = {
     Name = "Postgres Database in ${var.aws_region}"
   }
 }
