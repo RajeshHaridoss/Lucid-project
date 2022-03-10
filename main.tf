@@ -41,16 +41,12 @@ resource "aws_subnet" "public" {
 resource "aws_route_table" "public" {
   vpc_id = "${aws_vpc.main.id}"
 
+  gateway_id             = "${aws_internet_gateway.igw.id}"
+  destination_cidr_block = "0.0.0.0/0"
+ 
   tags = {
     Name = "public_route_table_main"
   }
-}
-
-# add public internet gateway to the route table
-resource "aws_route" "public" {
-  gateway_id             = "${aws_internet_gateway.igw.id}"
-  destination_cidr_block = "0.0.0.0/0"
-  route_table_id         = "${aws_route_table.public.id}"
 }
 
 
