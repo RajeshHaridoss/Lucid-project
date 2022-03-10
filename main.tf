@@ -36,22 +36,26 @@ resource "aws_subnet" "public" {
   }
 }
 
+# dynamic list of the public subnets created above
+data "aws_subnet_ids" "public" {
+  depends_on = ["aws_subnet.public"]
+  vpc_id     = "${aws_vpc.main.id}"
+}
 
 # main route table for vpc and subnets
 resource "aws_route_table" "public" {
   vpc_id = "${aws_vpc.main.id}"
-	
-	
-  route {
-    cidr_block = "10.0.0.0/18"
-    gateway_id = aws_internet_gateway.igw.id
-  }
-
-  tags = {
+  tags {
     Name = "public_route_table_main"
   }
 }
 
+# add public gateway to the route table
+resource "aws_route" "public" {
+  gateway_id             = "${aws_internet_gateway.igw.id}"
+  destination_cidr_block = "0.0.0.0/0"
+  route_table_id         = "${aws_route_table.public.id}"
+}
 
 # associate route table with vpc
 resource "aws_main_route_table_association" "public" {
@@ -63,7 +67,7 @@ resource "aws_main_route_table_association" "public" {
 resource "aws_route_table_association" "public" {
   count = length(var.availability_zones)
 
-  subnet_id      = "${element(var.public_subnets_cidr,count.index)}"
+  subnet_id      = "${element(data.aws_subnet_ids.public.id, count.index)}"
   route_table_id = "${aws_route_table.public.id}"
 }
 
