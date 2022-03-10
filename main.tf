@@ -67,7 +67,7 @@ resource "aws_main_route_table_association" "public" {
 resource "aws_route_table_association" "public" {
   count = length(var.availability_zones)
 
-  subnet_id      = "${element(data.aws_subnet_ids.public.id, count.index)}"
+  subnet_id      = "${element(data.aws_subnet_ids.public.ids, count.index)}"
   route_table_id = "${aws_route_table.public.id}"
 }
 
