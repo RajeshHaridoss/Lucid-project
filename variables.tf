@@ -17,7 +17,7 @@ variable "aws_region" {
 
 variable "ec2_amis" {
   description = "ami to support t2-nano instance"
-  type        = "map"
+  type        = map
 
   default = {
     "us-east-1" = "ami-04169656fea786776"
@@ -37,7 +37,7 @@ variable "instance_type" {
 
 
 variable "public_subnets_cidr" {
-  type = "list"
+  type = list
   default = ["10.0.0.0/24", "10.0.2.0/24"]
 }
 
