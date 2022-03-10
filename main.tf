@@ -206,19 +206,6 @@ output "url" {
   value = "http://${aws_alb.main_alb.dns_name}/"
 }
 
-# Route53 record for DNS entry
-resource "aws_route53_record" "www" {
-  zone_id = aws_route53_zone.primary.zone_id
-  name    = "${var.dns_name}"
-  type    = "A"
-
-  alias {
-    name                   = aws_alb.main_alb.dns_name
-    zone_id                = aws_alb.main_alb.zone_id
-    evaluate_target_health = true
-  }
-}
-
 ##############Create Web servers and it's resources##############################
 
 #Create security group for the web server
