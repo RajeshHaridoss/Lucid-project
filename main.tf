@@ -38,14 +38,14 @@ resource "aws_subnet" "public" {
 
 # dynamic list of the public subnets created above
 data "aws_subnet_ids" "public" {
-  depends_on = ["aws_subnet.public"]
+  depends_on = [aws_subnet.public]
   vpc_id     = "${aws_vpc.main.id}"
 }
 
 # main route table for vpc and subnets
 resource "aws_route_table" "public" {
   vpc_id = "${aws_vpc.main.id}"
-  tags {
+  tags = {
     Name = "public_route_table_main"
   }
 }
