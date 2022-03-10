@@ -50,7 +50,7 @@ resource "aws_route_table" "public" {
   tags {
     Name = "public_route_table_main"
   }
-
+}
 
 # add public internet gateway to the route table
 resource "aws_route" "public" {
