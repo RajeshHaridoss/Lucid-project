@@ -283,7 +283,7 @@ resource "aws_autoscaling_group" "ec2_asg" {
   min_size = 1
   max_size = 6
   desired_capacity = 2
-  target_group_arns = "${aws_alb_target_group.demo-tg.arn}"
+  target_group_arns = ["${aws_alb_target_group.demo-tg.arn}"]
   vpc_zone_identifier  = "${aws_subnet.private.*.id}"
   health_check_type = "EC2"
   tag {
