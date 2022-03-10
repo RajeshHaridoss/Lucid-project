@@ -163,7 +163,7 @@ resource "aws_security_group" "alb_sg" {
 resource "aws_alb" "main_alb" {
   name                      = "main-alb"
   security_groups           = ["${aws_security_group.alb_sg.id}"]
-  subnets                   = ["${aws_subnet.private.*.id}"]
+  subnets                   = ["${aws_subnet.private.id[0]}", "${aws_subnet.private.id[1]}"]
   tags = {
     Name = "main-alb"
   }
