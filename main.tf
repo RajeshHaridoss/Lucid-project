@@ -162,7 +162,7 @@ resource "aws_security_group" "alb_sg" {
 # using ALB - instances in private subnets
 resource "aws_alb" "main_alb" {
   count = length(var.availability_zones)
-  subnet_id      = "${element(data.aws_subnet_ids.public.ids, count.index)}"
+  subnets      = "${element(data.aws_subnet_ids.public.ids, count.index)}"
   name                      = "main-alb"
   security_groups           = ["${aws_security_group.alb_sg.id}"]
   # subnets                   = ["${aws_subnet.private.id[0]}", "${aws_subnet.private.id[1]}"]
