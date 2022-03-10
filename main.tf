@@ -1,17 +1,3 @@
-terraform {
-  required_version = "~>1.0.2"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 3.0"
-    }
-  }
-}
-
-provider "aws" {
-  region  = var.aws_region
-}
 ################################ create VPC and its resources############
 
 # one vpc to hold them all, and in the cloud bind them
@@ -423,9 +409,10 @@ resource "aws_db_subnet_group" "rds_test" {
   subnet_ids    = "${aws_subnet.private.*.id}"
   tags = {
     Name = "DB Subnet Group"
-
+  }
 }
 
 output "postgress-address" {
   value = "address: ${aws_db_instance.db.address}"
+}
 
