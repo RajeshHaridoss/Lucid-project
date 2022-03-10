@@ -268,7 +268,7 @@ resource "aws_instance" "app_server" {
 resource "aws_launch_configuration" "ec2" {
   image_id               = "${lookup(var.ec2_amis, var.aws_region)}"
   instance_type          = var.instance_type
-  security_groups        = "${aws_security_group.ec2_sg}"
+  security_groups        = ["${aws_security_group.ec2_sg.id}"]
   user_data              = "${file("user_data.sh")}"
   lifecycle {
     create_before_destroy = true
