@@ -91,7 +91,7 @@ resource "aws_subnet" "private" {
 
 # dynamic list of the private subnets created above
 data "aws_subnet_ids" "private" {
-  depends_on = ["aws_subnet.private"]
+  depends_on = [aws_subnet.private]
   vpc_id     = "${aws_vpc.main.id}"
 }
 
@@ -100,7 +100,7 @@ data "aws_subnet_ids" "private" {
 resource "aws_eip" "demo_eip" {
   count    = "${length(var.availability_zones)}"
   vpc      = true
-  depends_on = ["aws_internet_gateway.igw"]
+  depends_on = [aws_internet_gateway.igw]
 }
 
 
@@ -110,7 +110,7 @@ resource "aws_nat_gateway" "demo" {
     count    = "${length(var.availability_zones)}"
     allocation_id = "${element(aws_eip.demo_eip.*.id, count.index)}"
     subnet_id = "${element(aws_subnet.public.*.id, count.index)}"
-    depends_on = ["aws_internet_gateway.igw"]
+    depends_on = [aws_internet_gateway.igw]
 }
 
 # for each of the private ranges, create a "private" route table.
@@ -127,7 +127,7 @@ resource "aws_route" "private_nat_gateway_route" {
   count = "${length(var.availability_zones)}"
   route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
   destination_cidr_block = "0.0.0.0/0"
-  depends_on = ["aws_route_table.private"]
+  depends_on = [aws_route_table.private]
   nat_gateway_id = "${element(aws_nat_gateway.demo.*.id, count.index)}"
 }
 
@@ -241,7 +241,7 @@ resource "aws_instance" "app_server" {
   ami                         = "${lookup(var.ec2_amis, var.aws_region)}"
   associate_public_ip_address = true
   count                       = "${length(var.availability_zones)}"
-  depends_on                  = ["aws_subnet.private"]
+  depends_on                  = [aws_subnet.private]
   instance_type               =  var.instance_type
   subnet_id                   = "${element(aws_subnet.private.*.id,count.index)}"
   user_data                   = "${file("user_data.sh")}"
