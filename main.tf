@@ -36,12 +36,6 @@ resource "aws_subnet" "public" {
   }
 }
 
-# dynamic list of the public subnets created above
-data "aws_subnet_ids" "public" {
-  depends_on = [aws_subnet.public]
-  vpc_id     = "${aws_vpc.main.id}"
-}
-
 
 # main route table for vpc and subnets
 resource "aws_route_table" "public" {
@@ -159,12 +153,12 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
-# using ALB - instances in private subnets
+# using ALB - instances in public subnets
 resource "aws_alb" "main_alb" {
-  subnets      = "${(data.aws_subnet_ids.public.ids)}"
+  # subnets      = "${(data.aws_subnet_ids.public.ids)}"
   name                      = "main-alb"
   security_groups           = ["${aws_security_group.alb_sg.id}"]
-  # subnets                   = ["${aws_subnet.private.id[0]}", "${aws_subnet.private.id[1]}"]
+  subnets                   = var.public_subnets_cidr
   tags = {
     Name = "main-alb"
   }
