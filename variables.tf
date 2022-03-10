@@ -66,7 +66,7 @@ variable "rds_engine" {
 }
 
 variable "rds_engine_version" {
-  default = "9.5.2"
+  default = "10.17"
 }
 
 variable "rds_db_name" {
