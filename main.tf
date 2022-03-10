@@ -31,7 +31,7 @@ resource "aws_subnet" "public" {
   count                   = "${length(var.availability_zones)}"
   map_public_ip_on_launch = true
   vpc_id                  = "${aws_vpc.main.id}"
-  tags {
+  tags = {
     Name = "subnet-pub-${count.index}"
   }
 }
@@ -83,7 +83,7 @@ resource "aws_subnet" "private" {
   count                   = "${length(var.availability_zones)}"
   map_public_ip_on_launch = true
   vpc_id                  = "${aws_vpc.main.id}"
-  tags {
+  tags = {
     Name = "subnet-priv-${count.index}"
   }
 }
